@@ -4,6 +4,6 @@ from . import views
 
 
 urlpatterns = [
-    url('', views.sms_response, name='sms'),
+    url('', views.sms_reply, name='sms'),
 
 ]

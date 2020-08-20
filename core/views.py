@@ -10,7 +10,7 @@ def sms_response(request):
     return HttpResponse("Hello, world.")
 
 @csrf_exempt
-def mms_reply(self):
+def sms_reply(self):
 
     response = MessagingResponse()
     msg = response.message("Hello world!")
