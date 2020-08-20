@@ -39,6 +39,8 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
+# for pgbouncer on heroku
+DISABLE_SERVER_SIDE_CURSORS = True
 
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
@@ -85,6 +87,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'dopushups.urls'
 
@@ -169,5 +173,10 @@ try:
     del DATABASES['default']['OPTIONS']['sslmode']
 except KeyError as e:
     pass
+
+# forward to https
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+
              
 
