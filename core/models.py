@@ -9,10 +9,10 @@ class Column(models.Model):
     challenger = models.ForeignKey('core.Challenger', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __repr__(self):
-        return self.id
+        return "{0} - {1}".format(str(self.id), self.challenger)
 
     def __str__(self):
-        return self.id
+        return "{0} - {1}".format(str(self.id), self.challenger)
 
     class Meta:
         db_table = "column"
@@ -23,6 +23,8 @@ class Challenger(models.Model):
     phone = models.CharField(max_length=50)
     email = models.EmailField(max_length=254)
     exercises = models.ManyToManyField('core.Exercise', related_name='challenger')
+
+
 
     def __repr__(self):
         return self.name

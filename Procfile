@@ -1,4 +1,4 @@
 release: python manage.py migrate
-web: gunicorn dopushups.wsgi --log-file -
+web: bin/start-pgbouncer gunicorn automizzen.wsgi
 
 
