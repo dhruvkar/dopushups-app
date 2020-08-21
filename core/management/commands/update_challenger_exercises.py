@@ -11,6 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
     	s = Spreadsheet()
+    	exercises = s.get_exercise_list()
     	ce = s.challenger_exercises()
     	for k, v in ce.items():
     		qs = []

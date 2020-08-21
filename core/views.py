@@ -7,10 +7,19 @@ from twilio.twiml.messaging_response import MessagingResponse
 
 
 @csrf_exempt
-def sms_reply(self):
+def sms_reply(request):
+
+    message_sid = request.GET.get('MessageSid', '')
+    from_number = request.GET.get('From', '')
+    to_number = request.GET.get('To', '')
+    body = request.GET.get('Body', '')
+    
+    print (from_number)
 
     response = MessagingResponse()
-    msg = response.message("Hello world!")
+    msg = response.message(from_number)
     #msg.media("https://i.imgur.com/HLHBnl9.jpeg")
 
     return HttpResponse(str(response))
+
+

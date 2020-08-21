@@ -6,13 +6,14 @@ from django.db import models
 class Column(models.Model):
 
     id = models.IntegerField(primary_key=True)
-    challenger = models.ForeignKey('core.Challenger', on_delete=models.SET_NULL, blank=True, null=True)
+    challenger = models.ForeignKey('core.Challenger', on_delete=models.SET_NULL, blank=True, null=True, related_name="column")
+    exercise = models.ForeignKey('core.Exercise', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __repr__(self):
-        return "{0} - {1}".format(str(self.id), self.challenger)
+        return "column {0} - {1} - {2}".format(str(self.id), self.challenger, self.exercise)
 
     def __str__(self):
-        return "{0} - {1}".format(str(self.id), self.challenger)
+        return "column {0} - {1} - {2}".format(str(self.id), self.challenger, self.exercise)
 
     class Meta:
         db_table = "column"
@@ -23,7 +24,7 @@ class Challenger(models.Model):
     phone = models.CharField(max_length=50)
     email = models.EmailField(max_length=254)
     exercises = models.ManyToManyField('core.Exercise', related_name='challenger')
-
+    timezone = models.CharField(max_length=70, blank=True, null=True)
 
 
     def __repr__(self):
@@ -65,10 +66,10 @@ class Exercise(models.Model):
     sms_code = models.CharField(max_length=5)
 
     def __repr__(self):
-        return "{0} - {1}".format(self.sms_code, self.name)
+        return "{0} ({1})".format(self.name, self.sms_code)
 
     def __str__(self):
-        return "{0} - {1}".format(self.sms_code, self.name)
+        return "{0} ({1})".format(self.name, self.sms_code)
     
     class Meta:
         db_table = "exercise"

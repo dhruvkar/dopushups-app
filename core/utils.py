@@ -11,15 +11,15 @@ import pendulum
 class Spreadsheet:
 
     def __init__(self, key=settings.GOOGLE_SPREADSHEET_KEY, creds=settings.GOOGLE_CREDS_FILE):
-        self.exercises = []
-        self.challengers = []
 
         scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
         credentials = ServiceAccountCredentials.from_json_keyfile_name(creds, scope)
         gc = gspread.authorize(credentials)
-        self.sheet = gc.open_by_key(key).sheet1
+        self.wks = gc.open_by_key(key)
+        self.sheet = self.wks.sheet1
         self.raw_header = self.sheet.row_values(1)
         
+
     def get_exercise_list(self):
         d = self.sheet.row_values(1)
         e = []
@@ -27,7 +27,7 @@ class Spreadsheet:
             if not x.lower().startswith("date"):
                 e.append(x.lower().split(' ')[-1])
 
-        self.exercises = list(set(e))
+        return list(set(e))
 
 
 
@@ -69,3 +69,35 @@ class Spreadsheet:
         return d
 
         
+
+    def columns_exercises(self):
+        #TODO - too many hits to the sheet, hits the quota limit. 
+        # Need to find a bulk method of finding cells
+        l = []
+        ce = self.challenger_exercises()
+        for k, v in ce.items():
+            d = {}
+            d['name'] = k
+            search_name = ' '.join(k.split('_')).title()
+            for x in v:
+                search = search_name + " " + x.title() 
+                cell = self.sheet.find(search)  #too many hits
+                print (k, x)
+                d['name'] = k
+                d['exercise'] = x
+                d['column'] = cell.col
+            l.append(d)
+
+        return l
+
+
+    def get_range(self):
+        cols = self.sheet.col_count
+        rows = self.sheet.row_count
+        ran = self.sheet.range('A1:{0}'.format(gspread.utils.rowcol_to_a1(rows, cols)))
+        
+
+
+    def get_today_row(self, timezone):
+        pass
+
