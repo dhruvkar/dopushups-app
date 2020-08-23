@@ -34,7 +34,7 @@ class IncomingSMS:
             pass
 
 
-    def make_help_text(self, challenger):
+    def make_help_text(self):
         template = """
         You are doing:
         {0}.
