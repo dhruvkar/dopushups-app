@@ -20,5 +20,6 @@ class Command(BaseCommand):
 
     		ch = Challenger.objects.update_or_create(name=k)
     		ch[0].exercises.add(*qs)
+        return
     		
     	

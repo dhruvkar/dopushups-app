@@ -17,3 +17,4 @@ class Command(BaseCommand):
             challenger = Challenger.objects.filter(name=col["name"]).first()
             exercise = Exercise.objects.filter(name=col["exercise"]).first()
             Column.objects.update_or_create(number=col["column"], challenger=challenger, exercise=exercise)
+        return
