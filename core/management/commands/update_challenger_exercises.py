@@ -18,8 +18,9 @@ class Command(BaseCommand):
     		for x in v:
     			qs.append(Exercise.objects.filter(name=x).first().id)
 
-    		ch = Challenger.objects.update_or_create(name=k)
-    		ch[0].exercises.add(*qs)
+    		ch, discard = Challenger.objects.update_or_create(name=k)
+    		ch.exercises.clear()
+            ch.exercises.add(*qs)
         return
     		
     	

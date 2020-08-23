@@ -13,6 +13,9 @@ class Command(BaseCommand):
         s = Spreadsheet()
         columns = s.columns_exercises()
 
+        dcols = Column.objects.all()
+        dcols.delete()
+
         for col in columns:
             challenger = Challenger.objects.filter(name=col["name"]).first()
             exercise = Exercise.objects.filter(name=col["exercise"]).first()
