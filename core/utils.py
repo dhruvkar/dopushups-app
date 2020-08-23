@@ -84,7 +84,7 @@ class Spreadsheet:
             exercise = splith[-1]
 
             return (name, exercise)
-            
+
 
     def columns_exercises(self):
 
@@ -102,7 +102,7 @@ class Spreadsheet:
 
 
         for i in search_items:
-            print (i)
+           
             d = {}
             for h in headers:
                 if h.value == i:

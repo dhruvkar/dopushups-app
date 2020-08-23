@@ -10,17 +10,18 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **kwargs):
-    	s = Spreadsheet()
-    	exercises = s.get_exercise_list()
-    	ce = s.challenger_exercises()
-    	for k, v in ce.items():
-    		qs = []
-    		for x in v:
-    			qs.append(Exercise.objects.filter(name=x).first().id)
+        s = Spreadsheet()
+        exercises = s.get_exercise_list()
+        ce = s.challenger_exercises()
+        for k, v in ce.items():
+            qs = []
+            for x in v:
+                qs.append(Exercise.objects.filter(name=x).first().id)
 
-    		ch, discard = Challenger.objects.update_or_create(name=k)
-    		ch.exercises.clear()
+            ch, discard = Challenger.objects.update_or_create(name=k)
+            ch.exercises.clear()
             ch.exercises.add(*qs)
+            
         return
-    		
-    	
+            
+        
