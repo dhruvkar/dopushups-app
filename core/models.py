@@ -63,6 +63,7 @@ class Exercise(models.Model):
 
 
     name = models.CharField(max_length=200, choices=EXERCISE_CHOICES, default=EXERCISE_PLANKS)
+    #unit = models.CharField(max_length=200, default=)
     sms_code = models.CharField(max_length=5)
 
     def __repr__(self):

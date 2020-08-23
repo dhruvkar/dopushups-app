@@ -37,12 +37,19 @@ class IncomingSMS:
     def make_help_text(self):
         template = "Hey {0}, you're doing:\n\n{1}.\n\nFor example, text:\n\n'20{2}'\n\nto add 20 {3} to your count."
 
+        a = self.challenger.exercises.all()
         help0 = self.challenger.name.replace("_", " ").title()
-        help1 = ", ".join([str(e) for e in self.challenger.exercises.all()])
+        help1 = ", ".join([str(e) for e in a])
 
-        e = self.challenger.exercises.first()
+        try:
+            e = a[1]
+            help3 = e.name
+        except IndexError:
+            e = a[0]
+            help3 = "seconds of {1}".format(e.name)
+
         help2 = e.sms_code
-        help3 = e.name
+        
 
         return template.format(help0, help1, help2, help3)
 
