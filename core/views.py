@@ -35,7 +35,23 @@ class IncomingSMS:
 
 
     def make_help_text(self, challenger):
-        pass
+        template = """
+        You are doing:
+        {0}.
+
+        For example, text:
+
+        '20{1}' 
+
+        to add 20 {2} to your count.
+        """
+        help0 = ", ".join([str(e) for e in self.challenger.exercises.all()])
+
+        e = self.challenger.exercises.first()
+        help1 = e.sms_code
+        help2 = e.name
+
+        return template.format(help0, help1, help2)
 
 
     def parse_incoming_sms(self, sms):
@@ -94,7 +110,7 @@ def sms_reply(request):
     sms = IncomingSMS(request)
 
     response = MessagingResponse()
-    msg = response.message(sms.challenger.name)
+    msg = response.message(sms.make_help_text())
     return HttpResponse(str(response))
 
 
