@@ -31,6 +31,7 @@ class Spreadsheet:
 
 
 
+
     def get_challengers(self):
         c = []
 
@@ -68,36 +69,68 @@ class Spreadsheet:
 
         return d
 
-        
+    
+    def parse_header_value(self, header):
+        header = header.lower()
+        if not header.startswith('date'):
+            splith = header.split(" ")
+
+            if len(splith) == 2:
+                name = splith[0]
+               
+            elif len(splith) == 3:
+                name = splith[0] + "_" + splith[1]
+
+            exercise = splith[-1]
+
+            return (name, exercise)
+            
 
     def columns_exercises(self):
-        #TODO - too many hits to the sheet, hits the quota limit. 
-        # Need to find a bulk method of finding cells
+
         l = []
+        headers = self.get_header_range()
         ce = self.challenger_exercises()
-        for k, v in ce.items():
+
+        search_items = []
+        for key, values in ce.items():
+            search_name = ' '.join(key.split('_')).title()
+            for v in values:
+                search = search_name + " " + v.title()
+                search_items.append(search)
+
+
+
+        for i in search_items:
+            print (i)
             d = {}
-            d['name'] = k
-            search_name = ' '.join(k.split('_')).title()
-            for x in v:
-                search = search_name + " " + x.title() 
-                cell = self.sheet.find(search)  #too many hits
-                print (k, x)
-                d['name'] = k
-                d['exercise'] = x
-                d['column'] = cell.col
-            l.append(d)
+            for h in headers:
+                if h.value == i:
+                    d["column"] = h.col
+                    d['name'], d['exercise'] = self.parse_header_value(h.value)
+                    l.append(d)
+                    
 
         return l
+      
 
 
-    def get_range(self):
+    def get_entire_range(self):
         cols = self.sheet.col_count
         rows = self.sheet.row_count
         ran = self.sheet.range('A1:{0}'.format(gspread.utils.rowcol_to_a1(rows, cols)))
         
 
+    def get_header_range(self):
+        fc = "B1"   #don't get the Dates column
+        lc = gspread.utils.rowcol_to_a1(1, self.sheet.col_count)
+        hr = self.sheet.range("{0}:{1}".format(fc, lc))
+        return hr
 
-    def get_today_row(self, timezone):
-        pass
+    def get_today_row(self, timezone, day_offset=0):
+        now = pendulum.now(tz=timezone)
+        d = now.add(days=day_offset)
+        date_str = d.format("M/D/YYYY")
+        cell = self.sheet.find(date_str)
+        return cell.row
 

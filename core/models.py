@@ -5,15 +5,15 @@ from django.db import models
 
 class Column(models.Model):
 
-    id = models.IntegerField(primary_key=True)
+    number = models.IntegerField(default=0)
     challenger = models.ForeignKey('core.Challenger', on_delete=models.SET_NULL, blank=True, null=True, related_name="column")
     exercise = models.ForeignKey('core.Exercise', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __repr__(self):
-        return "column {0} - {1} - {2}".format(str(self.id), self.challenger, self.exercise)
+        return "column {0} - {1} - {2}".format(str(self.number), self.challenger, self.exercise)
 
     def __str__(self):
-        return "column {0} - {1} - {2}".format(str(self.id), self.challenger, self.exercise)
+        return "column {0} - {1} - {2}".format(str(self.number), self.challenger, self.exercise)
 
     class Meta:
         db_table = "column"

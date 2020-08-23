@@ -6,7 +6,7 @@ from core.models import Challenger, Exercise
 
 class Command(BaseCommand):
 
-    help = 'update column numbers for each challenger'
+    help = 'update exercises for each challenger'
 
 
     def handle(self, *args, **kwargs):
