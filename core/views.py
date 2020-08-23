@@ -35,23 +35,16 @@ class IncomingSMS:
 
 
     def make_help_text(self):
-        template = """
-        You are doing:
-        {0}.
+        template = "Hey {0}, you're doing:\n{1}.\n\nFor example, text:\n\n'20{2}'to add 20 {3} to your count."
 
-        For example, text:
-
-        '20{1}' 
-
-        to add 20 {2} to your count.
-        """
-        help0 = ", ".join([str(e) for e in self.challenger.exercises.all()])
+        help0 = self.challenger.name.replace("_", " ").title()
+        help1 = ", ".join([str(e) for e in self.challenger.exercises.all()])
 
         e = self.challenger.exercises.first()
-        help1 = e.sms_code
-        help2 = e.name
+        help2 = e.sms_code
+        help3 = e.name
 
-        return template.format(help0, help1, help2)
+        return template.format(help0, help1, help2, help3)
 
 
     def parse_incoming_sms(self, sms):
