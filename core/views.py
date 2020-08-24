@@ -57,6 +57,8 @@ class IncomingSMS:
 
 
     def handle_incoming_sms(self):
+        exercises_added = {}
+
         if "how" in self.body:
             return self.make_how_text()
         else:
@@ -78,34 +80,19 @@ class IncomingSMS:
                     count = 0
 
                 ex = Exercise.objects.filter(sms_code=found.group(2)).first()
+                #exercises_added[ex.name] = count
                 col = Column.objects.filter(challenger=self.challenger, exercise=ex).first()
 
 
                 core.utils.add(col.number, count, self.challenger.timezone)
 
-            
+        return "Good job! Added!"
 
 
     def make_response(self, count):
         pass
 
-    def parse_single_instruction(self, instruction):
-        """20k or -10"""
-        add_pat = re.compile(r'(\d{1,})' + '(' +sc+')')
-        sub_pat = re.compile(r'($-\d{1,})' + '(' +sc+')')
-        if instruction.startswith("-"):
-            sub_pat.match(instruction)
-        else:
-            add_pat = re.compile(r'(\d{1,})' + '(' +sc+')')
-        
 
-
-def handle_incoming_sms(body):
-
-    sc = '[' + "".join(SMSCODES) + ']'
-
-    pat_re = re.compile('\d{1,}{0}'.format(sc))
-    pat_re.findall(body)
 
 
 @csrf_exempt
