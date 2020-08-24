@@ -188,7 +188,7 @@ s = Spreadsheet()
 
 def add(col, value, timezone):
     row = s.get_today_row(timezone)
-    new = add_count(count=value, col=col, timezone=timezone, row=row)
+    new = s.add_count(count=value, col=col, timezone=timezone, row=row)
     return new
 
 
