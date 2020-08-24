@@ -58,7 +58,7 @@ class IncomingSMS:
         if "how" in self.body:
             return self.make_how_text()
         else:
-            splitsms = sms.split(" ")
+            splitsms = self.body.split(" ")
 
             sc = '[' + "".join(self.allowed_codes) + ']'
             add_pat = re.compile(r'(\d{1,})' + '(' +sc+')')
@@ -74,7 +74,7 @@ class IncomingSMS:
                     count = found[0]
                 except ValueError:
                     count = 0
-                    
+
                 exercise = Exercise.objects.filter(sms_code=found[1]).first()
                 col = Column.objects.filter(challenger=self.challenger, exercise=e).first()
 
