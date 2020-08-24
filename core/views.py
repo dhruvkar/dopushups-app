@@ -54,8 +54,8 @@ class IncomingSMS:
         return template.format(help0, help1, help2, help3)
 
 
-    def handle_incoming_sms(self, sms):
-        if "how" in sms:
+    def handle_incoming_sms(self):
+        if "how" in self.body:
             return self.make_how_text()
         else:
             splitsms = sms.split(" ")
@@ -70,7 +70,11 @@ class IncomingSMS:
                 else:
                     found = add_pat.match(ssms)
 
-                count = found[0]
+                try:
+                    count = found[0]
+                except ValueError:
+                    count = 0
+                    
                 exercise = Exercise.objects.filter(sms_code=found[1]).first()
                 col = Column.objects.filter(challenger=self.challenger, exercise=e).first()
 
