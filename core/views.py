@@ -73,11 +73,11 @@ class IncomingSMS:
                     found = add_pat.match(ssms)
 
                 try:
-                    count = found[0]
+                    count = int(found.group(1))
                 except ValueError:
                     count = 0
 
-                ex = Exercise.objects.filter(sms_code=found[1]).first()
+                ex = Exercise.objects.filter(sms_code=found.group(2)).first()
                 col = Column.objects.filter(challenger=self.challenger, exercise=ex).first()
 
 
