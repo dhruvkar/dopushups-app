@@ -77,8 +77,8 @@ class IncomingSMS:
                 except ValueError:
                     count = 0
 
-                exercise = Exercise.objects.filter(sms_code=found[1]).first()
-                col = Column.objects.filter(challenger=self.challenger, exercise=e).first()
+                ex = Exercise.objects.filter(sms_code=found[1]).first()
+                col = Column.objects.filter(challenger=self.challenger, exercise=ex).first()
 
 
                 core.utils.add(col.number, count, self.challenger.timezone)
