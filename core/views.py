@@ -6,6 +6,7 @@ import gspread
 from gspread.models import Cell
 from twilio.twiml.messaging_response import MessagingResponse
 
+import core
 from core.utils import Spreadsheet
 from core.models import Exercise, Challenger, Column
 
@@ -34,8 +35,8 @@ class IncomingSMS:
             pass
 
 
-    def make_help_text(self):
-        template = "Hey {0}, you're doing:\n\n{1}.\n\nFor example, text:\n\n'20{2}'\n\nto add 20 {3} to your count."
+    def make_how_text(self):
+        template = "Hey {0}, you're doing:\n\n{1}.\n\nFor example, text:\n\n'20{2}'\n\nto add 20 {3} to your count.\n\nText 'how' at anytime to get this message again."
 
         a = self.challenger.exercises.all()
         help0 = self.challenger.name.replace("_", " ").title()
@@ -46,17 +47,16 @@ class IncomingSMS:
             help3 = e.name
         except IndexError:
             e = a[0]
-            help3 = "seconds of {1}".format(e.name)
+            help3 = "seconds of {0}".format(e.name)
 
         help2 = e.sms_code
-        
 
         return template.format(help0, help1, help2, help3)
 
 
-    def parse_incoming_sms(self, sms):
-        if "help" in sms:
-            return self.make_help_text()
+    def handle_incoming_sms(self, sms):
+        if "how" in sms:
+            return self.make_how_text()
         else:
             splitsms = sms.split(" ")
 
@@ -65,26 +65,23 @@ class IncomingSMS:
             sub_pat = re.compile(r'($-\d{1,})' + '(' +sc+')')
 
             for ssms in splitsms:
-                pass
+                if ssms.startswith("-"):
+                    found = sub_pat.match(ssms)
+                else:
+                    found = add_pat.match(ssms)
+
+                count = found[0]
+                exercise = Exercise.objects.filter(sms_code=found[1]).first()
+                col = Column.objects.filter(challenger=self.challenger, exercise=e).first()
 
 
-            pos_count = add_pat.findall(sms)
-            neg_count = sub_pat.findall(sms)
+                core.utils.add(col.number, count, self.challenger.timezone)
 
             
 
-            if found:
-                for f in found:
-                    count = f[0]
-                    ex_code = f[1]
 
-                    e = Exercise.objects.filter(sms_code=ex_code).first()
-
-                    col = Column.objects.filter(challenger=self.challenger, exercise=e).first()
-                    
-
-
-
+    def make_response(self, count):
+        pass
 
     def parse_single_instruction(self, instruction):
         """20k or -10"""
@@ -94,7 +91,8 @@ class IncomingSMS:
             sub_pat.match(instruction)
         else:
             add_pat = re.compile(r'(\d{1,})' + '(' +sc+')')
-        pass
+        
+
 
 def handle_incoming_sms(body):
 
@@ -110,7 +108,7 @@ def sms_reply(request):
     sms = IncomingSMS(request)
 
     response = MessagingResponse()
-    msg = response.message(sms.make_help_text())
+    msg = response.message(sms.handle_incoming_sms())
     return HttpResponse(str(response))
 
 

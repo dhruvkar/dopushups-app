@@ -134,3 +134,63 @@ class Spreadsheet:
         cell = self.sheet.find(date_str)
         return cell.row
 
+
+    def get_day_total(self, col, timezone, row=None):
+        if not row:
+            row = get_today_row(timezone)
+        v = self.sheet.cell(row, col).value
+        try:
+            value = int(v)
+        except ValueError:
+            value = 0
+
+        return value
+
+
+    def get_total(self, col, timezone, row=None):
+        if not row:
+            row = self.get_today_row(timezone)
+        start = gspread.utils.rowcol_to_a1(2, col)
+        end = gspread.utils.rowcol_to_a1(row, col)
+        rang = self.sheet.range("{0}:{1}".format(start, end))
+
+        values = [r.value for r in rang]
+
+        l = []
+        for v in values:
+            try:
+                v = int(v)
+            except ValueError:
+                v = 0
+
+            l.append(v)
+
+        return sum(l)
+
+
+    def add_count(self, count, col, timezone, row=None):
+
+        if not row:
+            row = self.get_today_row(timezone)
+
+        v = self.get_day_total(timezone)
+        new = int(v) + int(count)
+        self.sheet.update_cell(row, col, new)
+        return new
+
+
+
+
+
+
+s = Spreadsheet()
+
+
+def add(col, value, timezone):
+    row = s.get_today_row(timezone)
+    new = add_count(count=value, col=col, timezone=timezone, row=row)
+    return new
+
+
+
+
