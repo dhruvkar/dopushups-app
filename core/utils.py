@@ -173,7 +173,7 @@ class Spreadsheet:
         if not row:
             row = self.get_today_row(timezone)
 
-        v = self.get_day_total(timezone)
+        v = self.get_day_total(col, timezone, row)
         new = int(v) + int(count)
         self.sheet.update_cell(row, col, new)
         return new
